@@ -1,20 +1,19 @@
-package com.demo.Expense_api.dto.wallet;
+// dto/category/CategoryResponse.java
+package com.demo.Expense_api.dto.category;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import java.math.BigDecimal;
 import java.util.UUID;
 
 @Data
 @Builder
 @AllArgsConstructor
-public class WalletResponse {
+public class CategoryResponse {
     private UUID id;
     private String name;
-    private String currencyCode;
-    private BigDecimal balance;
+    private String kind;      // "EXPENSE" or "INCOME"
     private String icon;
     private String colorHex;
-    private boolean isDefault;
+    private long transactionCount;
 }

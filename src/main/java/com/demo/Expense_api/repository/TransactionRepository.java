@@ -22,4 +22,8 @@ public interface TransactionRepository extends JpaRepository<Transaction, UUID> 
             "WHERE t.user.id = :userId AND t.kind = 'EXPENSE' " +
             "AND t.transactionDate BETWEEN :start AND :end")
     BigDecimal sumExpenseBetween(UUID userId, LocalDate start, LocalDate end);
+
+    // repository/TransactionRepository.java  — add this method to your existing file
+    @Query("SELECT COUNT(t) FROM Transaction t WHERE t.category.id = :categoryId")
+    long countByCategoryId(UUID categoryId);
 }

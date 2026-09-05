@@ -54,4 +54,10 @@ public class Wallet {
     protected void onUpdate() {
         updatedAt = OffsetDateTime.now();
     }
+
+    @Column(length = 50)
+    private String icon;
+
+    @Column(name = "color_hex", length = 7)
+    private String colorHex;
 }

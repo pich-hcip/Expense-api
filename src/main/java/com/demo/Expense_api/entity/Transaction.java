@@ -51,4 +51,8 @@ public class Transaction {
         createdAt = OffsetDateTime.now();
         if (transactionDate == null) transactionDate = LocalDate.now();
     }
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "category_id")
+    private Category category;  // nullable, matches the ALTER TABLE above
 }

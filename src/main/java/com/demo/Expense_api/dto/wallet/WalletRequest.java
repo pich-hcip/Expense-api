@@ -1,19 +1,21 @@
+// dto/wallet/WalletRequest.java
 package com.demo.Expense_api.dto.wallet;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
+import jakarta.validation.constraints.*;
 import lombok.Data;
 import java.math.BigDecimal;
-import java.util.UUID;
 
 @Data
-@Builder
-@AllArgsConstructor
-public class WalletResponse {
-    private UUID id;
+public class WalletRequest {
+    @NotBlank
     private String name;
+
+    @NotBlank
     private String currencyCode;
+
+    @NotNull
     private BigDecimal balance;
+
     private String icon;
     private String colorHex;
     private boolean isDefault;
