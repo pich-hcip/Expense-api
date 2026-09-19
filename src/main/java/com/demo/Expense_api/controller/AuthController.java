@@ -33,4 +33,5 @@ public class AuthController {
         passwordResetService.resetPassword(request.getEmail(), request.getNewPassword());
         return ResponseEntity.ok(new MessageResponse("Password has been reset successfully."));
     }
+
 }

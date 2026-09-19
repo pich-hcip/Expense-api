@@ -13,6 +13,8 @@ import com.demo.Expense_api.entity.Category;
 import com.demo.Expense_api.entity.User;
 import com.demo.Expense_api.entity.Wallet;
 import com.demo.Expense_api.repository.CategoryRepository;
+import org.springframework.transaction.annotation.Transactional;
+
 import java.util.UUID;
 
 import java.time.LocalDate;
@@ -56,7 +58,16 @@ public class TransactionService {
                 .amount(t.getAmount())
                 .title(t.getTitle())
                 .transactionDate(t.getTransactionDate())
+                .categoryName(t.getCategory() != null ? t.getCategory().getName() : "Uncategorized")
+                .categoryIcon(t.getCategory() != null ? t.getCategory().getIcon() : "more")
+                .categoryColorHex(t.getCategory() != null ? t.getCategory().getColorHex() : "#929292")
                 .build();
+    }
+
+    public List<TransactionResponse> getAllTransactions(UUID userId) {
+        return transactionRepository.findByUserIdOrderByTransactionDateDescCreatedAtDesc(userId).stream()
+                .map(this::toResponse)
+                .collect(Collectors.toList());
     }
 
     @org.springframework.transaction.annotation.Transactional
@@ -98,5 +109,28 @@ public class TransactionService {
 
         return toResponse(saved);
     }
+
+    @Transactional
+    public void deleteTransaction(UUID userId, UUID transactionId) {
+        Transaction transaction = transactionRepository.findById(transactionId)
+                .orElseThrow(() -> new IllegalArgumentException("Transaction not found"));
+
+        if (!transaction.getUser().getId().equals(userId)) {
+            throw new IllegalArgumentException("You don't have access to this transaction");
+        }
+
+        Wallet wallet = transaction.getWallet();
+
+        // Reverse the original effect on the wallet balance
+        if (transaction.getKind() == Transaction.Kind.INCOME) {
+            wallet.setBalance(wallet.getBalance().subtract(transaction.getAmount()));
+        } else {
+            wallet.setBalance(wallet.getBalance().add(transaction.getAmount()));
+        }
+        walletRepository.save(wallet);
+
+        transactionRepository.delete(transaction);
+    }
+
 
 }
